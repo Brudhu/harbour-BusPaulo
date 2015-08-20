@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/harbour-BusPaulo.png</file>
+        <file>images/bus.png</file>
+    </qresource>
+</RCC>
