@@ -116,6 +116,7 @@ Page {
     Component.onCompleted:
     {
         //timerPush.start()
+        pageStack.pushAttached(Qt.resolvedUrl("MapPage.qml"))
         ApiBus.getFavoriteNames();
         ApiBus.autenticar();
     }
