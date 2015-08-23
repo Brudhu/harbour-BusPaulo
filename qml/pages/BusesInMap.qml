@@ -22,14 +22,17 @@ Page {
     property string auxStringBuscar: ""
     onAuxStringBuscarChanged:
     {
-        var results = JSON.parse(auxStringBuscar);
-        for(var i = 0; i < results.length; ++i)
+        if(auxStringBuscar)
         {
-            if(results[i]["Sentido"] == sentido)
+            var results = JSON.parse(auxStringBuscar);
+            for(var i = 0; i < results.length; ++i)
             {
-                codigosLinha[i] = results[i].CodigoLinha
-                codDaLinha = codigosLinha[i];
-                ApiBus.buscarPosicaoVeiculos(codigosLinha[i])
+                if(results[i]["Sentido"] == sentido)
+                {
+                    codigosLinha[i] = results[i].CodigoLinha
+                    codDaLinha = codigosLinha[i];
+                    ApiBus.buscarPosicaoVeiculos(codigosLinha[i])
+                }
             }
         }
         /*for(i = 0; i < codigosLinha.length; ++i)
@@ -60,16 +63,16 @@ Page {
     Component.onCompleted:
     {
         addStop()
-        map.center
+        ApiBus.autenticar()
         ApiBus.buscarLinha(nomeDaLinha)
     }
 
     function addStop()
     {
-        var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle { opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png";}}}', map);
+        var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height; sourceItem: Rectangle { opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png";}}}', map);
 
-        stop.coordinate.latitude = parseFloat(stop_lat) + parseFloat(0.000265); // ajuste para ficar certo no MapPage
-        stop.coordinate.longitude = parseFloat(stop_lon) - parseFloat(0.000140); // ajuste para ficar certo no mapa
+        stop.coordinate.latitude = parseFloat(stop_lat) - parseFloat(0.00002); // ajuste para ficar certo no MapPage
+        stop.coordinate.longitude = parseFloat(stop_lon)// - parseFloat(0.000140); // ajuste para ficar certo no mapa
         map.addMapItem(stop);
     }
 
@@ -113,6 +116,7 @@ Page {
                 {
                     map.zoomLevel = zoomLevelStandard
                     map.center = map.circle.coordinate;
+                    console.log("AQUI PORRA positionsource")
                 }
             }
         }
@@ -125,10 +129,14 @@ Page {
             {
                 if(followCurrentPosition)
                 {
+                    console.log("AQUI PORRA followcurrentposition")
                     map.zoomLevel = zoomLevelStandard
                     map.center = map.circle.coordinate;
                 }
             }
+
+            center.latitude: stop_lat
+            center.longitude: stop_lon
 
             Plugin {
                 id: somePlugin
@@ -176,10 +184,13 @@ Page {
                 circle = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle {opacity: 0.9;width: 30;height: 30;radius: 15;color: Theme.highlightColor;border.width: 2; border.color: Theme.secondaryHighlightColor}}', map)
                 updatePosition();
                 zoomLevel = zoomLevelStandard
-                var center = src.position.coordinate;
-                center.latitude = parseFloat(stop_lat)
-                center.longitude = parseFloat(stop_lon)
+                /*var center = src.position.coordinate;
+                center.latitude = stop_lat
+                center.longitude = stop_lon
+                console.log(stop_lat + " " + stop_lon)
+                console.log(center.latitude + " " + center.longitude)
                 map.center = center;
+                console.log(map.center.latitude + " " + map.center.longitude)*/
             }
 
             MapMouseArea {

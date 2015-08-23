@@ -115,8 +115,20 @@ Page {
 
     Component.onCompleted:
     {
+        //timerPush.start()
         ApiBus.getFavoriteNames();
         ApiBus.autenticar();
+    }
+
+    Timer {
+        id: timerPush
+        interval: 1
+        onTriggered:
+        {
+            pageStack.pushAttached(Qt.resolvedUrl("MapPage.qml"))
+            pageStack.navigateForward()
+            pageStack.completeAnimation()
+        }
     }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable

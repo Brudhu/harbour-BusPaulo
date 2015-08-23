@@ -29,6 +29,30 @@ Page {
                 }
     }
 
+    function getRoutes(stopId)
+    {
+        stop1Model.clear();
+
+        var rs = saoPauloDB.returnRoutesInStop(stopId)
+
+        for (var i = 0; i < rs.length; ++i)
+        {
+            var sentido = parseInt(rs[i].substring(8, rs[i].indexOf(';'))) + 1
+            var trip_id = rs[i].substring(0, rs[i].indexOf(';'))
+            rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
+            var arrival_time = rs[i].substring(0, rs[i].indexOf(';'))
+            rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
+            var departure_time = rs[i].substring(0, rs[i].indexOf(';'))
+            rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
+            var stop_sequence = rs[i]
+            //console.log(sentido);
+
+            stop1Model.insert(stop1Model.count, {"textoDelegate":trip_id.substring(0, trip_id.length - 2), "codigoParada":stopId, "linha":trip_id.substring(0, trip_id.length - 2), "sentido":sentido, "tamanho":Theme.fontSizeMedium, "cor":"highlightColor", "leftMargin": Theme.paddingLarge, "isTime":false})
+
+        }
+        ApiBus.buscarPrevisaoChegadaPorParada(stopId)
+    }
+
     SilicaFlickable {
         id: silicaFlickable
         anchors.fill: parent
@@ -46,30 +70,6 @@ Page {
         }
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.
-
-        function getRoutes(stopId)
-        {
-            stop1Model.clear();
-
-            var rs = saoPauloDB.returnRoutesInStop(stopId)
-
-            for (var i = 0; i < rs.length; ++i)
-            {
-                var sentido = parseInt(rs[i].substring(8, rs[i].indexOf(';'))) + 1
-                var trip_id = rs[i].substring(0, rs[i].indexOf(';'))
-                rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
-                var arrival_time = rs[i].substring(0, rs[i].indexOf(';'))
-                rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
-                var departure_time = rs[i].substring(0, rs[i].indexOf(';'))
-                rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
-                var stop_sequence = rs[i]
-                //console.log(sentido);
-
-                stop1Model.insert(stop1Model.count, {"textoDelegate":trip_id.substring(0, trip_id.length - 2), "codigoParada":stopId, "linha":trip_id.substring(0, trip_id.length - 2), "sentido":sentido, "tamanho":Theme.fontSizeMedium, "cor":"highlightColor", "leftMargin": Theme.paddingLarge, "isTime":false})
-
-            }
-            ApiBus.buscarPrevisaoChegadaPorParada(stopId)
-        }
 
         Column {
             id: column
@@ -104,7 +104,7 @@ Page {
                     map.center.longitude = parseFloat(stop_lon)// - parseFloat(0.000140);
                     map.addMapItem(circle);
 
-                    silicaFlickable.getRoutes(stop_id);
+                    getRoutes(stop_id);
                 }
 
                 gesture.enabled: false
@@ -174,6 +174,7 @@ Page {
                             anchors.fill: parent
                             onClicked:
                             {
+                                console.log(stop_lat + " " + stop_lon)
                                 pageStack.push(Qt.resolvedUrl("BusesInMap.qml"), {"nomeDaLinha":stop1Model.get(index).textoDelegate, "stopId":stop_id, "sentido":stop1Model.get(index).sentido, "stop_lat":stop_lat, "stop_lon":stop_lon})
                             }
                         }

@@ -67,40 +67,14 @@ Page {
             rs[i] = rs[i].substring(rs[i].indexOf(';') + 1, rs[i].length);
             var stop_lon = rs[i]
 
-            var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle { property string stop_id: "' + stop_id + '"; property string stop_name: "' + stop_name + '"; property string stop_desc: "' + stop_desc + '"; property real stop_lat: ' + stop_lat + '; property real stop_lon: ' + stop_lon + ';opacity: 1; anchors.centerIn: parent; width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png"; anchors.centerIn: parent;} MouseArea {anchors.fill: parent; onClicked: {pageStack.push(Qt.resolvedUrl("StopPage.qml"), {"stop_id":parent.stop_id, "stop_name":parent.stop_name, "stop_desc":parent.stop_desc, "stop_lat":parent.stop_lat, "stop_lon":parent.stop_lon})}}}}', map);
+            var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height; sourceItem: Rectangle { id: rectangleStop; property string stop_id: "' + stop_id + '"; property string stop_name: "' + stop_name + '"; property string stop_desc: "' + stop_desc + '"; property real stop_lat: ' + stop_lat + '; property real stop_lon: ' + stop_lon + ';opacity: 1; width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png"; anchors.centerIn: parent;} MouseArea {anchors.fill: parent; onClicked: {pageStack.push(Qt.resolvedUrl("StopPage.qml"), {"stop_id":parent.stop_id, "stop_name":parent.stop_name, "stop_desc":parent.stop_desc, "stop_lat":parent.stop_lat, "stop_lon":parent.stop_lon})}}}}', map);
 
-            stop.coordinate.latitude = parseFloat(stop_lat) + parseFloat(0.000265); // ajuste para ficar certo no MapPage
-            stop.coordinate.longitude = parseFloat(stop_lon) - parseFloat(0.000140); // ajuste para ficar certo no mapa
+            stop.coordinate.latitude = parseFloat(stop_lat) - parseFloat(0.00002); // ajuste para ficar certo no MapPage
+            stop.coordinate.longitude = parseFloat(stop_lon)// - parseFloat(0.000140); // ajuste para ficar certo no mapa
             map.addMapItem(stop);
         }
-        /*db.transaction(
-            function(tx) {
-                var rs = tx.executeSql('SELECT * FROM PONTOS_SAO_PAULO WHERE stop_lat > ' + latLow + ' AND stop_lat < ' + latHigh + ' AND stop_lon > ' + lonLow + ' AND stop_lon < ' + lonHigh);
-
-                for (var i = 0; i < rs.rows.length; ++i)
-                {
-                    var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle { property string stop_id: ' + rs.rows.item(i).stop_id + '; property real lat: ' + rs.rows.item(i).stop_lat + '; property real lon: ' + rs.rows.item(i).stop_lon + ';opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png"; anchors.centerIn: parent;} MouseArea {anchors.fill: parent; onClicked: {console.log("Você clicou no ponto: Lat = " + parent.lat + " | Lon = " + parent.lon)}}}}', map);
-
-                    stop.coordinate.latitude = rs.rows.item(i).stop_lat + 0.000145; // ajuste para ficar certo no MapPage
-                    stop.coordinate.longitude = rs.rows.item(i).stop_lon - 0.000155; // ajuste para ficar certo no mapa
-                    map.addMapItem(stop);
-                        //lastLinha = rs.rows.item(i).NOME_LINHA;
-                }
-            }
-        )*/
     }
 
-    /*Button {
-        y: 20
-        text: "Voltar"
-        onClicked:
-        {
-            pageStack.pop();
-        }
-    }*/
-
-    /*SilicaFlickable {
-        anchors.fill: parent*/
     Column {
         id: column
 
@@ -133,8 +107,6 @@ Page {
                 property var coord;
                 onPositionChanged: {
                     coord = src.position.coordinate;
-                    console.log("Coordinate: ", coord.latitude, coord.longitude);
-                    console.log("Coordinate: ", coord);
                     map.updatePosition();
                     if(map.followCurrentPosition)
                     {
