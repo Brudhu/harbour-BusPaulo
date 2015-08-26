@@ -47,6 +47,7 @@ Dialog {
                 placeholderText: qsTr("Nome do novo favorito")
                 maximumLength: 26
                 font.pixelSize: Theme.fontSizeMedium;
+                Component.onCompleted: forceActiveFocus()
             }
         }
     }

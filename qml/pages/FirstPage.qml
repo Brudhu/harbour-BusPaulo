@@ -89,6 +89,18 @@ Page {
         )
     }
 
+    function createDatabases()
+    {
+        var db = LocalStorage.openDatabaseSync("BusPaulo Database", "1.0", "Database for the BusPaulo app!", 1000000);
+
+        db.transaction(
+            function(tx) {
+                var rs = tx.executeSql('CREATE TABLE IF NOT EXISTS FAVORITES (NAME TEXT NOT NULL UNIQUE)');
+                var rs = tx.executeSql('CREATE TABLE IF NOT EXISTS FAV_ROUTE_STOP_TIMES (COD_PARADA TEXT NOT NULL, END_PARADA TEXT NOT NULL, COD_LINHA TEXT NOT NULL, NOME_LINHA TEXT NOT NULL, NOME_FAV TEXT NOT NULL, UNIQUE (COD_PARADA, END_PARADA, COD_LINHA, NOME_LINHA, NOME_FAV))');
+            }
+        )
+    }
+
     property string auxStringBuscar: ""
     onAuxStringBuscarChanged: console.log("buscarLinha: " + auxStringBuscar);
 
@@ -115,9 +127,17 @@ Page {
 
     Component.onCompleted:
     {
+        createDatabases()
         timerPush.start()
         ApiBus.getFavoriteNames();
         ApiBus.autenticar();
+    }
+
+    onStatusChanged:
+    {
+        if (status === PageStatus.Active) {
+            ApiBus.getFavoriteNames();
+        }
     }
 
     Timer {
@@ -179,6 +199,7 @@ Page {
                 id: comboboxFavName
                 width: parent.width
                 label: qsTr("Nome")
+                enabled: favoritesNamesModel.count
 
                 menu: ContextMenu {
                       Repeater {
