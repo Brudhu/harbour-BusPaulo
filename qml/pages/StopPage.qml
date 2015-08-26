@@ -96,10 +96,10 @@ Page {
                 plugin: somePlugin
 
                 Component.onCompleted: {
-                    circle = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle { opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png"; /*anchors.centerIn: parent;*/}}}', map);
+                    circle = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height; sourceItem: Rectangle { id: rectangleStop; opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png"; /*anchors.centerIn: parent;*/}}}', map);
                     zoomLevel = 18;
-                    circle.coordinate.latitude = parseFloat(stop_lat) + parseFloat(0.000265); // ajuste para ficar certo no MapPage
-                    circle.coordinate.longitude = parseFloat(stop_lon) - parseFloat(0.000140); // ajuste para ficar certo no mapa
+                    circle.coordinate.latitude = parseFloat(stop_lat) - parseFloat(0.00002); // ajuste para ficar certo no MapPage
+                    circle.coordinate.longitude = parseFloat(stop_lon)// - parseFloat(0.000140); // ajuste para ficar certo no mapa
                     map.center.latitude = parseFloat(stop_lat)// + parseFloat(0.000265);
                     map.center.longitude = parseFloat(stop_lon)// - parseFloat(0.000140);
                     map.addMapItem(circle);
@@ -169,7 +169,7 @@ Page {
                             color: cor === "highlightColor" ? Theme.highlightColor : cor === "secondaryHighlightColor" ? Theme.secondaryHighlightColor : cor === "primaryColor"  ? Theme.primaryColor : cor === "secondaryColor" ? Theme.secondaryColor : "white";
                         }
 
-                        MouseArea
+                        /*MouseArea
                         {
                             anchors.fill: parent
                             onClicked:
@@ -177,7 +177,7 @@ Page {
                                 console.log(stop_lat + " " + stop_lon)
                                 pageStack.push(Qt.resolvedUrl("BusesInMap.qml"), {"nomeDaLinha":stop1Model.get(index).textoDelegate, "stopId":stop_id, "sentido":stop1Model.get(index).sentido, "stop_lat":stop_lat, "stop_lon":stop_lon})
                             }
-                        }
+                        }*/
 
                         Component {
                             id: contextMenu
@@ -185,6 +185,13 @@ Page {
                             ContextMenu {
                                 anchors.horizontalCenter: container.horizontalCenter
 
+                                MenuItem {
+                                    text: qsTr("Visualizar Ônibus no Mapa")
+                                    enabled: !stop1Model.get(index).isTime
+                                    onClicked: {
+                                        pageStack.push(Qt.resolvedUrl("BusesInMap.qml"), {"nomeDaLinha":stop1Model.get(index).textoDelegate, "stopId":stop_id, "sentido":stop1Model.get(index).sentido, "stop_lat":stop_lat, "stop_lon":stop_lon})
+                                    }
+                                }
                                 MenuItem {
                                     text: qsTr("Adicionar aos Favoritos")
                                     enabled: !stop1Model.get(index).isTime

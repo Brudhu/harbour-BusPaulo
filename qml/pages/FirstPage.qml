@@ -115,20 +115,19 @@ Page {
 
     Component.onCompleted:
     {
-        //timerPush.start()
-        pageStack.pushAttached(Qt.resolvedUrl("MapPage.qml"))
+        timerPush.start()
         ApiBus.getFavoriteNames();
         ApiBus.autenticar();
     }
 
     Timer {
         id: timerPush
-        interval: 1
+        interval: 5
         onTriggered:
         {
             pageStack.pushAttached(Qt.resolvedUrl("MapPage.qml"))
-            pageStack.navigateForward()
-            pageStack.completeAnimation()
+            //pageStack.navigateForward()
+            //pageStack.completeAnimation()
         }
     }
 
@@ -200,7 +199,7 @@ Page {
 
             Timer {
                 interval: 20000
-                repeat: autoRefreshSwitch.checked
+                repeat: autoRefreshSwitch.checked && Qt.application.active
                 running: autoRefreshSwitch.checked
                 onTriggered:
                 {

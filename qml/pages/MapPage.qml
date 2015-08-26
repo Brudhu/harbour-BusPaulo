@@ -102,7 +102,7 @@ Page {
             {
                 id: src
                 updateInterval: 1000
-                active: true
+                active: Qt.application.active
 
                 property var coord;
                 onPositionChanged: {
@@ -140,7 +140,7 @@ Page {
                     property real lastCenterLonTimer: 0
                     interval: 350
                     repeat: true
-                    running: true
+                    running: Qt.application.active
                     onTriggered:
                     {
                         if(lastCenterLatTimer === map.center.latitude && lastCenterLonTimer === map.center.longitude)

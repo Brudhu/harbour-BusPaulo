@@ -52,7 +52,7 @@ Page {
         {
             //console.log(results["vs"][i]["py"])
             //console.log(results["vs"][i]["px"])
-            var bus = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle { opacity: 1;width: 40;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/bus.png";}}}', map);
+            var bus = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height / 2; sourceItem: Rectangle { id: rectangleStop; opacity: 1;width: 40;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/bus.png";}}}', map);
 
             bus.coordinate.latitude = parseFloat(results["vs"][i]["py"]) + parseFloat(0.000265); // ajuste para ficar certo no MapPage
             bus.coordinate.longitude = parseFloat(results["vs"][i]["px"]) - parseFloat(0.000140); // ajuste para ficar certo no mapa
@@ -69,7 +69,7 @@ Page {
 
     function addStop()
     {
-        var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height; sourceItem: Rectangle { opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png";}}}', map);
+        var stop = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; anchorPoint.x: rectangleStop.width / 2; anchorPoint.y: rectangleStop.height; sourceItem: Rectangle { id: rectangleStop; opacity: 1;width: 60;height: width; color: "transparent"; Image{anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: "qrc:/images/harbour-BusPaulo.png";}}}', map);
 
         stop.coordinate.latitude = parseFloat(stop_lat) - parseFloat(0.00002); // ajuste para ficar certo no MapPage
         stop.coordinate.longitude = parseFloat(stop_lon)// - parseFloat(0.000140); // ajuste para ficar certo no mapa
@@ -104,7 +104,7 @@ Page {
         {
             id: src
             updateInterval: 1000
-            active: true
+            active: Qt.application.active
 
             property var coord;
             onPositionChanged: {
@@ -157,7 +157,7 @@ Page {
                 property real lastCenterLonTimer: 0
                 interval: 2500
                 repeat: true
-                running: true
+                running: Qt.application.active
                 onTriggered:
                 {
                     auxStringBuscar = "";
