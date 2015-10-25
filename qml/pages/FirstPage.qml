@@ -34,6 +34,13 @@ import QtQuick.LocalStorage 2.0
 import "../ApiAccess.js" as ApiBus
 
 
+/*
+
+IMPORTANTE! CREDITAR AUTOR DO ÍCONE!
+<div>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
+
+*/
+
 Page {
     id: page
 
@@ -128,7 +135,6 @@ Page {
     Component.onCompleted:
     {
         createDatabases()
-        timerPush.start()
         ApiBus.getFavoriteNames();
         ApiBus.autenticar();
     }
@@ -140,17 +146,6 @@ Page {
         }
     }
 
-    Timer {
-        id: timerPush
-        interval: 5
-        onTriggered:
-        {
-            pageStack.pushAttached(Qt.resolvedUrl("MapPage.qml"))
-            //pageStack.navigateForward()
-            //pageStack.completeAnimation()
-        }
-    }
-
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -158,19 +153,19 @@ Page {
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
-                text: qsTr("Criar novo favorito")
+                text: qsTr("Editar Favoritos")
                 onClicked:
                 {
-                    pageStack.push(Qt.resolvedUrl("NewFavoriteDialog.qml"));
+                    pageStack.push(Qt.resolvedUrl("ManageFavorites.qml"));
                 }
             }
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Mapa")
                 onClicked:
                 {
                     pageStack.push(Qt.resolvedUrl("MapPage.qml"));
                 }
-            }
+            }*/
             MenuItem {
                 text: qsTr("Atualizar")
                 onClicked:

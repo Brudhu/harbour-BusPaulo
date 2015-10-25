@@ -35,9 +35,26 @@ import QtPositioning 5.0
 Page {
     id: root
     backNavigation: headerTitle.show
+    forwardNavigation: headerTitle.show
 
     property real distanceToLook: 0.003
     property real zoomLevelStandard: 18
+
+    Component.onCompleted:
+    {
+        timerPush.start()
+    }
+
+    Timer {
+        id: timerPush
+        interval: 5
+        onTriggered:
+        {
+            pageStack.pushAttached(Qt.resolvedUrl("FirstPage.qml"))
+            //pageStack.navigateForward()
+            //pageStack.completeAnimation()
+        }
+    }
 
     /*Image {
         height: 50

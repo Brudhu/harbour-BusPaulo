@@ -152,18 +152,21 @@ Page {
             Behavior on center { PropertyAnimation { easing.type: Easing.InOutCubic; duration: 400; } }
             Behavior on zoomLevel { PropertyAnimation { easing.type: Easing.InOutCubic; duration: 400; } }
 
-            Timer {
+            /*Timer {
+                id: updatePositions
                 property real lastCenterLatTimer: 0
                 property real lastCenterLonTimer: 0
-                interval: 2500
+                interval: 5000
                 repeat: true
                 running: Qt.application.active
                 onTriggered:
                 {
+                    rect.width = rect.parent.width
+                    animation.restart()
                     auxStringBuscar = "";
                     ApiBus.buscarLinha(nomeDaLinha)
                 }
-            }
+            }*/
 
             gesture.enabled: !headerTitle.show
 
@@ -184,6 +187,10 @@ Page {
                 circle = Qt.createQmlObject('import Sailfish.Silica 1.0; import QtQuick 2.0; import QtLocation 5.0; MapQuickItem{zoomLevel: 0; sourceItem: Rectangle {opacity: 0.9;width: 30;height: 30;radius: 15;color: Theme.highlightColor;border.width: 2; border.color: Theme.secondaryHighlightColor}}', map)
                 updatePosition();
                 zoomLevel = zoomLevelStandard
+                //console.log(center.latitude)
+                center.latitude = stop_lat
+                //console.log(center.latitude)
+                //console.log(stop_lat)
                 /*var center = src.position.coordinate;
                 center.latitude = stop_lat
                 center.longitude = stop_lon
@@ -277,6 +284,36 @@ Page {
             onClicked:
             {
                 map.followCurrentPosition = !map.followCurrentPosition
+            }
+        }
+    }
+
+    Rectangle
+    {
+        id: rect
+        width: parent.width
+        height: Theme.paddingSmall / 2 + 4
+        color: Theme.highlightColor
+        anchors.top: parent.top
+        anchors.topMargin: -2
+        anchors.left: parent.left
+
+        border.color: "black"
+        border.width: 2
+
+        SequentialAnimation {
+            id: animation
+            running: Qt.application.active
+            NumberAnimation { target: rect; property: "width"; to: 0; duration: 7500 }//updatePositions.interval }
+            onRunningChanged:
+            {
+                if(!running && Qt.application.active)
+                {
+                    rect.width = rect.parent.width
+                    animation.restart()
+                    auxStringBuscar = "";
+                    ApiBus.buscarLinha(nomeDaLinha)
+                }
             }
         }
     }

@@ -56,10 +56,15 @@ ApplicationWindow
     property Item firstPage
 
     initialPage: Component {
-        FirstPage {
-            id: firstPage
-            Component.onCompleted: appWindow.firstPage = firstPage
+        MapPage {
+            id: mapPage
+            Component.onCompleted: appWindow.firstPage = mapPage
         }
+    }
+
+    FirstPage {
+        id: firstPage
+        //Component.onCompleted: appWindow.firstPage = firstPage
     }
 
     function refreshTimesFav()
