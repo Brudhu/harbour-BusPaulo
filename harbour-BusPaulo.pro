@@ -36,7 +36,8 @@ OTHER_FILES += \
     qml/pages/StopPage.qml \
     qml/pages/NewFavoriteDialog.qml \
     qml/pages/AddToFavoriteDialog.qml \
-    qml/pages/BusesInMap.qml
+    qml/pages/BusesInMap.qml \
+    qml/pages/ManageFavorites.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
